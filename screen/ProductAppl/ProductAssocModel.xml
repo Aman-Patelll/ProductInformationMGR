@@ -1,0 +1,182 @@
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        require-authentication="anonymous-all">
+    <transition name="createProductAssoc">
+        <service-call name="create#moqui.ProductAssoc" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="updateProductAssoc">
+        <service-call name="update#moqui.ProductAssoc" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="deleteProductAssoc">
+        <service-call name="delete#moqui.ProductAssoc" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="getProductAssocTypeEnumList">
+        <actions>
+            <entity-find entity-name="moqui.basic.Enumeration" list="productAssocTypeEnumId">
+                <econdition field-name="enumTypeId" value="ProductAssocType" />
+                <order-by field-name="description"/>
+            </entity-find>
+            <script>ec.web.sendJsonResponse(productAssocTypeEnumId)</script>
+        </actions>
+        <default-response type="none" />
+    </transition>
+
+    <actions>
+        <entity-find entity-name="moqui.ProductAssoc" list="productAssoc">
+            <search-form-inputs default-order-by="productId" />
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <container-box>
+            <box-header><label text="Product Assoc Model" type="h3" /></box-header>
+
+            <box-toolbar>
+                <container-dialog id="CreateProductAssoc" button-text="Create Product Assoc">
+                    <form-single name="CreateProductAssoc" transition="createProductAssoc">
+                        <field name="productId">
+                            <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="toProductId">
+                            <default-field title="To Product Id" tooltip="Please Enter To Product Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="productAssocTypeEnumId">
+                            <default-field title="Product Assoc Type Enum Id" tooltip="Please Enter Product Assoc Type Enum Id">
+                                <drop-down>
+                                    <dynamic-options transition="getProductAssocTypeEnumList" value-field="enumId" label-field="description" />
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="fromDate">
+                            <default-field title="From Date" tooltip="Please Enter From Date">
+                                <text-line/>
+                            </default-field>
+                        </field>
+                        <field name="thruDate">
+                            <default-field title="Thru Date" tooltip="Please Enter Thru Date">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit />
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-toolbar>
+
+            <box-body>
+                <form-list name="ListProductAssoc"
+                           list="productAssoc"
+                           skip-form="true"
+                           header-dialog="true"
+                           select-columns="true"
+                           show-csv-button="true"
+                           show-text-button="true"
+                           show-pdf-button="true">
+                    <field name="productId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productId}" />
+                        </default-field>
+                    </field>
+                    <field name="toProductId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${toProductId}" />
+                        </default-field>
+                    </field>
+                    <field name="productAssocTypeEnumId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productAssocTypeEnumId}" />
+                        </default-field>
+                    </field>
+                    <field name="fromDate">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${fromDate}" />
+                        </default-field>
+                    </field>
+                    <field name="thruDate">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${thruDate}" />
+                        </default-field>
+                    </field>
+                    <field name="delete" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <link url="deleteProductAssoc" btn-type="danger" icon="fa fa-trash" />
+                        </default-field>
+                    </field>
+                    <field name="edit" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <container-dialog id="UpdateProductAssoc" button-text="Update Product Assoc" icon="fa fa-pencil">
+                                <form-single name="UpdateProductAssoc" transition="updateProductAssoc">
+                                    <field name="productId">
+                                        <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="toProductId">
+                                        <default-field title="To Product Id" tooltip="Please Enter To Product Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="productAssocTypeEnumId">
+                                        <default-field title="Product Assoc Type Enum Id" tooltip="Please Enter Product Assoc Type Enum Id">
+                                            <drop-down>
+                                                <dynamic-options transition="getProductAssocTypeEnumList" value-field="enumId" label-field="description" />
+                                            </drop-down>
+                                        </default-field>
+                                    </field>
+                                    <field name="fromDate">
+                                        <default-field title="From Date" tooltip="Please Enter From Date">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="thruDate">
+                                        <default-field title="Thru Date" tooltip="Please Enter Thru Date">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="submitButton">
+                                        <default-field title="Update">
+                                            <submit />
+                                        </default-field>
+                                    </field>
+                                </form-single>
+                            </container-dialog>
+                        </default-field>
+                    </field>
+                    <field name="findButton">
+                        <header-field>
+                            <submit text="Find" />
+                        </header-field>
+                    </field>
+                </form-list>
+            </box-body>
+        </container-box>
+    </widgets>
+</screen>

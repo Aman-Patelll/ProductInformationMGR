@@ -1,0 +1,40 @@
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+    <!-- ========================= ProductFeature Entity ============================= -->
+    <entity entity-name="ProductFeature" package="moqui">
+        <field name="productFeatureId" type="id" is-pk="true" />
+        <field name="productFeatureTypeEnumId" type="id" />
+
+        <relationship type="one" title="ProductFeatureType" related="moqui.basic.Enumeration">
+            <key-map field-name="productFeatureTypeEnumId" related="enumId"/>
+        </relationship>
+
+        <seed-data>
+            <moqui.basic.EnumerationType description="Product Feature Type" enumTypeId="ProductFeatureType" />
+            <moqui.basic.Enumeration description="Memory" enumId="MEMORY" enumTypeId="ProductFeatureType" />
+            <moqui.basic.Enumeration description="Color" enumId="COLOR" enumTypeId="ProductFeatureType"/>
+        </seed-data>
+    </entity>
+
+    <entity entity-name="ProductFeatureAppl" package="moqui">
+        <field name="productId" type="id" is-pk="true" />
+        <field name="productFeatureId" type="id" is-pk="true" />
+        <field name="fromDate" type="date" is-pk="true" />
+        <field name="thruDate" type="date" />
+        <field name="applTypeEnumId" type="id" />
+
+        <relationship type="one" related="moqui.Product" />
+        <relationship type="one" related="moqui.ProductFeature" />
+        <relationship type="one" title="ProductFeatureAppl" related="moqui.basic.Enumeration">
+            <key-map field-name="applTypeEnumId" related="enumId" />
+        </relationship>
+
+        <seed-data>
+            <moqui.basic.EnumerationType description="Product Feature Appl" enumTypeId="ProductFeatureAppl" />
+            <moqui.basic.Enumeration description="Distinguishing Feature" enumId="DISTINGUISHING_FEAT" enumTypeId="ProductFeatureAppl" />
+            <moqui.basic.Enumeration description="Optional Feature" enumId="OPTIONAL_FEATURE" enumTypeId="ProductFeatureAppl"/>
+            <moqui.basic.Enumeration description="Required Feature" enumId="REQUIRED_FEATURE" enumTypeId="ProductFeatureAppl"/>
+            <moqui.basic.Enumeration description="Selectable Feature" enumId="SELECTABLE_FEATURE" enumTypeId="ProductFeatureAppl"/>
+            <moqui.basic.Enumeration description="Standard Feature" enumId="STANDARD_FEATURE" enumTypeId="ProductFeatureAppl"/>
+        </seed-data>
+    </entity>
+</entities>

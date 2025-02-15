@@ -1,0 +1,161 @@
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        require-authentication="anonymous-all">
+    <transition name="createProductContent">
+    <service-call name="create#moqui.ProductContent" />
+    <default-response url="." />
+</transition>
+
+    <transition name="updateProductContent">
+<service-call name="update#moqui.ProductContent" />
+<default-response url="." />
+</transition>
+
+    <transition name="deleteProductContent">
+<service-call name="delete#moqui.ProductContent" />
+<default-response url="." />
+</transition>
+
+    <transition name="getProductContentTypeEnumList">
+<actions>
+    <entity-find entity-name="moqui.basic.Enumeration" list="productContentTypeEnumId">
+        <econdition field-name="enumTypeId" value="ProductContentType" />
+        <order-by field-name="description"/>
+    </entity-find>
+    <script>ec.web.sendJsonResponse(productContentTypeEnumId)</script>
+</actions>
+<default-response type="none" />
+</transition>
+
+    <actions>
+        <entity-find entity-name="moqui.ProductContent" list="productContent">
+            <search-form-inputs default-order-by="productId" />
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <container-box>
+            <box-header>
+                <label text="Product Content Model" type="h3" />
+            </box-header>
+
+            <box-toolbar>
+                <container-dialog id="CreateProductContent" button-text="Create Product Content">
+                    <form-single name="CreateProductContent" transition="createProductContent">
+                        <field name="productId">
+                            <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="productContentTypeEnumId">
+                            <default-field title="Product Content Type Enum Id" tooltip="Please Enter Product Content Type Enum Id">
+                                <drop-down>
+                                    <dynamic-options transition="getProductContentTypeEnumList" value-field="enumId" label-field="description" />
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="contentLocation">
+                            <default-field title="Content Location" tooltip="Please Enter Content Location">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit />
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-toolbar>
+
+            <box-body>
+                <form-list name="ListProductContent"
+                           list="productContent"
+                           skip-form="true"
+                           header-dialog="true"
+                           select-columns="true"
+                           show-csv-button="true"
+                           show-text-button="true"
+                           show-pdf-button="true">
+                    <field name="productId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productId}" />
+                        </default-field>
+                    </field>
+                    <field name="productContentId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productContentId}" />
+                        </default-field>
+                    </field>
+                    <field name="productContentTypeEnumId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productContentTypeEnumId}" />
+                        </default-field>
+                    </field>
+                    <field name="contentLocation">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${contentLocation}" />
+                        </default-field>
+                    </field>
+                    <field name="delete" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <link url="deleteProductContent" btn-type="danger" icon="fa fa-trash" />
+                        </default-field>
+                    </field>
+                    <field name="edit" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <container-dialog id="UpdateProductContent" button-text="Update Product Content" icon="fa fa-pencil">
+                                <form-single name="UpdateProductContent" transition="updateProductContent">
+                                    <field name="productId">
+                                        <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="productContentId">
+                                        <default-field title="Product Content Id" tooltip="Please Enter Product Content Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="productContentTypeEnumId">
+                                        <default-field title="Product Content Type Enum Id" tooltip="Please Enter Product Content Type Enum Id">
+                                            <drop-down>
+                                                <dynamic-options transition="getProductContentTypeEnumList" value-field="enumId" label-field="description" />
+                                            </drop-down>
+                                        </default-field>
+                                    </field>
+                                    <field name="contentLocation">
+                                        <default-field title="Content Location" tooltip="Please Enter Content Location">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="submitButton">
+                                        <default-field title="Update">
+                                            <submit />
+                                        </default-field>
+                                    </field>
+                                </form-single>
+                            </container-dialog>
+                        </default-field>
+                    </field>
+                    <field name="findButton">
+                        <header-field>
+                            <submit text="Find" />
+                        </header-field>
+                    </field>
+                </form-list>
+            </box-body>
+        </container-box>
+    </widgets>
+</screen>

@@ -1,0 +1,164 @@
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        require-authentication="anonymous-all">
+    <transition name="createProductDimension">
+        <service-call name="create#moqui.ProductDimension" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="updateProductDimension">
+        <service-call name="update#moqui.ProductDimension" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="deleteProductDimension">
+        <service-call name="delete#moqui.ProductDimension" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="getProductDimensionTypeEnumList">
+        <actions>
+            <entity-find entity-name="moqui.basic.Enumeration" list="productDimensionTypeEnumId">
+                <econdition field-name="enumTypeId" value="ProductDimensionType" />
+                <order-by field-name="description"/>
+            </entity-find>
+            <script>ec.web.sendJsonResponse(productDimensionTypeEnumId)</script>
+        </actions>
+        <default-response type="none" />
+    </transition>
+
+    <actions>
+        <entity-find entity-name="moqui.ProductDimension" list="productDimension">
+            <search-form-inputs default-order-by="productId" />
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <container-box>
+            <box-header><label text="Product Dimension Model" type="h3" /></box-header>
+
+            <box-toolbar>
+                <container-dialog id="CreateProductDimension" button-text="Create Product Dimension">
+                    <form-single name="CreateProductDimension" transition="createProductDimension">
+                        <field name="productId">
+                            <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="dimensionTypeEnumId">
+                            <default-field title="Dimension Type Enum Id" tooltip="Please Enter Dimension Type Enum Id ">
+                                <drop-down>
+                                    <dynamic-options transition="getProductDimensionTypeEnumList" value-field="enumId" label-field="description" />
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="dimensionValue">
+                            <default-field title="Dimension Value" tooltip="Please Enter Dimension Value">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="valueUomId">
+                            <default-field title="Value UOM Id" tooltip="Please Enter Unit of Measure Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit />
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-toolbar>
+
+            <box-body>
+                <form-list name="ListProductDimension"
+                           list="productDimension"
+                           skip-form="true"
+                           header-dialog="true"
+                           select-columns="true"
+                           show-csv-button="true"
+                           show-text-button="true"
+                           show-pdf-button="true">
+                    <field name="productId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productId}" />
+                        </default-field>
+                    </field>
+                    <field name="dimensionTypeEnumId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${dimensionTypeEnumId}" />
+                        </default-field>
+                    </field>
+                    <field name="dimensionValue">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${dimensionValue}" />
+                        </default-field>
+                    </field>
+                    <field name="valueUomId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${valueUomId}" />
+                        </default-field>
+                    </field>
+                    <field name="delete" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <link url="deleteProductDimension" btn-type="danger" icon="fa fa-trash" />
+                        </default-field>
+                    </field>
+                    <field name="edit" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <container-dialog id="UpdateProductDimension" button-text="Update Product Dimension" icon="fa fa-pencil">
+                                <form-single name="UpdateProductDimension" transition="updateProductDimension">
+                                    <field name="productId">
+                                        <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="dimensionTypeEnumId">
+                                        <default-field title="Dimension Type Enum Id" tooltip="Please Enter Dimension Type Enum Id">
+                                            <drop-down>
+                                                <dynamic-options transition="getProductDimensionTypeEnumList" value-field="enumId" label-field="description" />
+                                            </drop-down>
+                                        </default-field>
+                                    </field>
+                                    <field name="dimensionValue">
+                                        <default-field title="Dimension Value" tooltip="Please Enter Dimension Value">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="valueUomId">
+                                        <default-field title="Value UOM Id" tooltip="Please Enter Unit of Measure Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="submitButton">
+                                        <default-field title="Update">
+                                            <submit />
+                                        </default-field>
+                                    </field>
+                                </form-single>
+                            </container-dialog>
+                        </default-field>
+                    </field>
+                    <field name="findButton">
+                        <header-field>
+                            <submit text="Find" />
+                        </header-field>
+                    </field>
+                </form-list>
+            </box-body>
+        </container-box>
+    </widgets>
+</screen>

@@ -1,0 +1,186 @@
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        require-authentication="anonymous-all">
+    <transition name="createProductFeatureAppl">
+        <service-call name="create#moqui.ProductFeatureAppl" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="updateProductFeatureAppl">
+        <service-call name="update#moqui.ProductFeatureAppl" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="deleteProductFeatureAppl">
+        <service-call name="delete#moqui.ProductFeatureAppl" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="getApplTypeEnumList">
+        <actions>
+            <entity-find entity-name="moqui.basic.Enumeration" list="applTypeEnumId">
+                <econdition field-name="enumTypeId" value="ProductFeatureAppl" />
+                <order-by field-name="description"/>
+            </entity-find>
+            <script>ec.web.sendJsonResponse(applTypeEnumId)</script>
+        </actions>
+        <default-response type="none" />
+    </transition>
+
+    <actions>
+        <entity-find entity-name="moqui.ProductFeatureAppl" list="productFeatureAppl">
+            <search-form-inputs default-order-by="productFeatureId" />
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <container-box>
+            <box-header><label text="Product Feature Appl Model" type="h3" /></box-header>
+
+            <box-toolbar>
+                <container-dialog id="CreateProductFeatureAppl" button-text="Create Product Feature Appl">
+                    <form-single name="CreateProductFeatureAppl" transition="createProductFeatureAppl">
+                        <field name="productId">
+                            <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="productFeatureId">
+                            <default-field title="Product Feature Id" tooltip="Please Enter Product Feature Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="applTypeEnumId">
+                            <default-field title="Appl Type Enum Id" tooltip="Please Enter Appl Type Enum Id">
+                                <drop-down>
+                                    <dynamic-options transition="getApplTypeEnumList" value-field="enumId" label-field="description" />
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="productFeatureId">
+                            <default-field title="Product Feature Id" tooltip="Please Enter Product Feature Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="fromDate">
+                            <default-field title="from Date" tooltip="Please Enter From Date">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="thruDate">
+                            <default-field title="from Date" tooltip="Please Enter Thru Date">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit />
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-toolbar>
+
+            <box-body>
+                <form-list name="ListProductFeatureAppl"
+                           list="productFeatureAppl"
+                           skip-form="true"
+                           header-dialog="true"
+                           select-columns="true"
+                           show-csv-button="true"
+                           show-text-button="true"
+                           show-pdf-button="true">
+                    <field name="productId">
+                        <default-field>
+                            <display text="${productId}" />
+                        </default-field>
+                    </field>
+                    <field name="productFeatureId">
+                        <default-field>
+                            <display text="${productFeatureId}" />
+                        </default-field>
+                    </field>
+                    <field name="applTypeEnumId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${applTypeEnumId}" />
+                        </default-field>
+                    </field>
+                    <field name="fromDate">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${fromDate}" />
+                        </default-field>
+                    </field>
+                    <field name="thruDate">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${thruDate}" />
+                        </default-field>
+                    </field>
+                    <field name="delete" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <link url="deleteProductFeatureAppl" btn-type="danger" icon="fa fa-trash" />
+                        </default-field>
+                    </field>
+                    <field name="edit" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <container-dialog id="UpdateProductFeatureAppl" button-text="Update Product Feature Appl" icon="fa fa-pencil">
+                                <form-single name="UpdateProductFeatureAppl" transition="updateProductFeatureAppl">
+                                    <field name="productId">
+                                        <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="productFeatureId">
+                                        <default-field title="Product Feature Id" tooltip="Please Enter Product Feature Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="applTypeEnumId">
+                                        <default-field title="Appl Type Enum Id" tooltip="Please Enter Appl Type Enum Id">
+                                            <drop-down>
+                                                <dynamic-options transition="getApplTypeEnumList" value-field="enumId" label-field="description" />
+                                            </drop-down>
+                                        </default-field>
+                                    </field>
+                                    <field name="productFeatureId">
+                                        <default-field title="Product Feature Id" tooltip="Please Enter Product Feature Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="fromDate">
+                                        <default-field title="from Date" tooltip="Please Enter From Date">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="thruDate">
+                                        <default-field title="from Date" tooltip="Please Enter Thru Date">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="submitButton">
+                                        <default-field title="Update">
+                                            <submit />
+                                        </default-field>
+                                    </field>
+                                </form-single>
+                            </container-dialog>
+                        </default-field>
+                    </field>
+                    <field name="findButton">
+                        <header-field>
+                            <submit text="Find" />
+                        </header-field>
+                    </field>
+                </form-list>
+            </box-body>
+        </container-box>
+    </widgets>
+</screen>

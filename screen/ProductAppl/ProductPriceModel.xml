@@ -1,0 +1,159 @@
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
+        require-authentication="anonymous-all">
+    <transition name="createProductPrice">
+        <service-call name="create#moqui.ProductPrice" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="updateProductPrice">
+        <service-call name="update#moqui.ProductPrice" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="deleteProductPrice">
+        <service-call name="delete#moqui.ProductPrice" />
+        <default-response url="." />
+    </transition>
+
+    <transition name="getProductPriceTypeEnumList">
+        <actions>
+            <entity-find entity-name="moqui.basic.Enumeration" list="productPriceTypeEnumId">
+                <econdition field-name="enumTypeId" value="ProductPriceType" />
+                <order-by field-name="description"/>
+            </entity-find>
+            <script>ec.web.sendJsonResponse(productPriceTypeEnumId)</script>
+        </actions>
+        <default-response type="none" />
+    </transition>
+
+    <actions>
+        <entity-find entity-name="moqui.ProductPrice" list="productPrice">
+            <search-form-inputs default-order-by="productId" />
+        </entity-find>
+    </actions>
+
+    <widgets>
+        <container-box>
+            <box-header><label text="Product Price Model" type="h3" /></box-header>
+
+            <box-toolbar>
+                <container-dialog id="CreateProductPrice" button-text="Create Product Price">
+                    <form-single name="CreateProductPrice" transition="createProductPrice">
+                        <field name="productId">
+                            <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="priceTypeEnumId">
+                            <default-field title="Product Price Type Enum Id" tooltip="Please Enter Product Price Type Enum Id ">
+                                <drop-down>
+                                    <dynamic-options transition="getProductPriceTypeEnumList" value-field="enumId" label-field="description" />
+                                </drop-down>
+                            </default-field>
+                        </field>
+                        <field name="price">
+                            <default-field title="Price" tooltip="Please Enter Price of product">
+                                <text-line />
+                            </default-field>
+                        </field>
+                        <field name="submitButton">
+                            <default-field title="Create">
+                                <submit />
+                            </default-field>
+                        </field>
+                    </form-single>
+                </container-dialog>
+            </box-toolbar>
+
+            <box-body>
+                <form-list name="ListProductPrice"
+                           list="productPrice"
+                           skip-form="true"
+                           header-dialog="true"
+                           select-columns="true"
+                           show-csv-button="true"
+                           show-text-button="true"
+                           show-pdf-button="true">
+                    <field name="productId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productId}" />
+                        </default-field>
+                    </field>
+                    <field name="productPriceId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${productPriceId}" />
+                        </default-field>
+                    </field>
+                    <field name="priceTypeEnumId">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${priceTypeEnumId}" />
+                        </default-field>
+                    </field>
+                    <field name="price">
+                        <header-field show-order-by="case-insensitive">
+                            <text-find hide-options="true" />
+                        </header-field>
+                        <default-field>
+                            <display text="${price}" />
+                        </default-field>
+                    </field>
+                    <field name="delete" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <link url="deleteProductPrice"  btn-type="danger" icon="fa fa-trash" />
+                        </default-field>
+                    </field>
+                    <field name="edit" print-width="5" print-width-type="characters">
+                        <default-field>
+                            <container-dialog id="UpdateProductPrice" button-text="Update Product Price" icon="fa fa-pencil">
+                                <form-single name="UpdateProductPrice" transition="updateProductPrice" >
+                                    <field name="productId">
+                                        <default-field title="Product Id" tooltip="Please Enter Product Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="productPriceId">
+                                        <default-field title="Product Price Id" tooltip="Please Enter Product Price Id">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="priceTypeEnumId">
+                                        <default-field title="Product Price Type Enum Id" tooltip="Please Enter Product Price Type Enum Id ">
+                                            <drop-down>
+                                                <dynamic-options transition="getProductPriceTypeEnumList" value-field="enumId" label-field="description" />
+                                            </drop-down>
+                                        </default-field>
+                                    </field>
+                                    <field name="price">
+                                        <default-field title="Price" tooltip="Please Enter Price of product">
+                                            <text-line />
+                                        </default-field>
+                                    </field>
+                                    <field name="submitButton">
+                                        <default-field title="Update">
+                                            <submit />
+                                        </default-field>
+                                    </field>
+                                </form-single>
+                            </container-dialog>
+                        </default-field>
+                    </field>
+                    <field name="findButton">
+                        <header-field>
+                            <submit text="Find" />
+                        </header-field>
+                    </field>
+                </form-list>
+            </box-body>
+        </container-box>
+    </widgets>
+</screen>
